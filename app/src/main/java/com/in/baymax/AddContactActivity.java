@@ -65,14 +65,14 @@ public class AddContactActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference().child(uid);
+                myRef.child("profile-details").updateChildren(hashMap);
+                myRef.child("profile-details").updateChildren(map2);
                 getContacts();
+
             }
         });
-        database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child(uid);
-        myRef.child("profile-details").updateChildren(hashMap);
-        myRef.child("profile-details").updateChildren(map2);
 
 
 

@@ -28,7 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_signup);
+       // setContentView(R.layout.activity_sign_up);
 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.activity_sign_up);
@@ -36,10 +36,6 @@ public class SignUpActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(getAssets(),
                 "fonts/Walkway_Bold.ttf");
 
-        name = (EditText) findViewById(R.id.eT_name);
-        name.setTypeface(tf);
-        phone = (EditText) findViewById(R.id.eT_phone);
-        phone.setTypeface(tf);
         password = (EditText) findViewById(R.id.eT_password);
         password.setTypeface(tf);
         login = (Button) findViewById(R.id.btn_login);
@@ -49,10 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.eT_email);
         email.setTypeface(tf);
 
-        final String mName = name.getText().toString();
-        final String mEmail = email.getText().toString();
-        final String mPassword = password.getText().toString();
-        final String mPhone = phone.getText().toString();
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -81,8 +73,14 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+               // final String mName = name.getText().toString();
+                final String mEmail = email.getText().toString();
+                final String mPassword = password.getText().toString();
+              //  final String mPhone = phone.getText().toString();
 
-                if(mName.isEmpty() || mEmail.isEmpty() || mPassword.isEmpty() || mPhone.isEmpty())
+
+
+                if( mEmail.isEmpty() || mPassword.isEmpty()  )
                 {
                     Toast.makeText(SignUpActivity.this, "Please fill in all the fields!", Toast.LENGTH_SHORT).show();
                 }
@@ -90,14 +88,16 @@ public class SignUpActivity extends AppCompatActivity {
                 else {
                     createAccount(mEmail, mPassword);
                 }
+
+               // Intent intent = new Intent(SignUpActivity.this, AddContactActivity.class);
+               // intent.putExtra("name", mName);
+               // intent.putExtra("phone", mPhone);
             }
 
 
         });
 
-        Intent intent = new Intent(SignUpActivity.this, AddContactActivity.class);
-        intent.putExtra("name", mName);
-        intent.putExtra("phone", mPhone);
+
     }
 
 
@@ -135,7 +135,7 @@ public class SignUpActivity extends AppCompatActivity {
                         else
                         {
                             Toast.makeText(SignUpActivity.this,"Authentication Successful!",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(SignUpActivity.this,AddContactActivity.class));
+                            startActivity(new Intent(SignUpActivity.this,ProfileActivity.class));
                         }
                     }
                 });

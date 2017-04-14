@@ -10,78 +10,67 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/bg213"
-    tools:context="com.in.baymax.SignUpActivity">
+    tools:context="com.in.baymax.LoginActivity">
 
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:srcCompat="@drawable/ab"
-        android:id="@+id/iV_logo"
-        android:layout_marginTop="40dp"
-        android:layout_centerHorizontal="true" />
-
-
-
-
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="45dp"
-        android:paddingLeft="10dp"
-        android:inputType="textEmailAddress"
-        android:background="@drawable/button_bg"
-        android:textColor="@color/colorPrimary"
-        android:ems="10"
-        android:textColorHint="@color/colorPrimary"
-        android:drawableLeft="@drawable/ic_email"
-        android:layout_below="@+id/iV_logo"
+        android:id="@+id/iV_logo_login"
+        android:layout_above="@+id/eT_email_login"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:id="@+id/eT_email"
-        android:hint="Email" />
+        android:layout_marginTop="40dp" />
 
 
     <EditText
         android:layout_width="250dp"
         android:layout_height="45dp"
-        android:paddingLeft="10dp"
-        android:inputType="textPassword"
+        android:paddingLeft="5dp"
+        android:layout_marginTop="40dp"
+        android:inputType="text"
         android:background="@drawable/button_bg"
         android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
         android:ems="10"
-        android:drawableLeft="@drawable/ic_lock"
-        android:layout_below="@+id/eT_email"
-        android:layout_alignStart="@+id/eT_email"
-        android:layout_marginTop="5dp"
-        android:id="@+id/eT_password"
-        android:hint="Password" />
+        android:drawableLeft="@drawable/ic_name"
+        android:id="@+id/eT_name_pro"
+        android:hint="Email"
+        android:textColorHint="@color/colorPrimary"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/eT_phone_pro"
+        android:layout_alignStart="@+id/eT_phone_pro" />
+
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:paddingLeft="5dp"
+        android:inputType="phone"
+        android:textColorHint="@color/colorPrimary"
+        android:background="@drawable/button_bg"
+        android:textColor="@color/colorPrimary"
+        android:ems="10"
+        android:drawableLeft="@drawable/ic_phone"
+        android:id="@+id/eT_phone_pro"
+        android:hint="Phone"
+        android:layout_below="@+id/eT_name_pro"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp" />
 
 
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Sign Up"
+        android:text="Save and Proceed"
         android:textSize="15dp"
+        android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
         android:background="@drawable/button_bg"
-        android:id="@+id/btn_signUp"
-        android:layout_below="@+id/eT_password"
+        android:id="@+id/btn_save_pro"
+        android:layout_below="@+id/eT_phone_pro"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp" />
-
-    <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="Already a User? Login."
-        android:textSize="20dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/btn_login"
-        android:background="@null"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/btn_signUp"
-        android:textAllCaps="false"
-        android:textColor="@color/colorWhite"/>
+        android:layout_marginBottom="41dp" />
 
 
 
