@@ -50,7 +50,15 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
+<<<<<<< HEAD
         <activity android:name=".ProfileActivity"></activity>
+=======
+
+        <service
+            android:name=".BackgroundService"
+            android:enabled="true"
+            android:exported="true"></service>
+>>>>>>> 8a8a9ee74cf3daf170ca3c533b2bccaa3a756105
     </application>
 
 </manifest>
