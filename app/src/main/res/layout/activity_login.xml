@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg213"
+    tools:context="com.in.baymax.LoginActivity">
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/ab"
+        android:id="@+id/iV_logo_login"
+        android:layout_above="@+id/eT_email_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="59dp" />
+
+
+    <!-- <EditText
+         android:layout_width="250dp"
+         android:layout_height="45dp"
+         android:paddingLeft="5dp"
+         android:textColor="@color/colorPrimary"
+         android:inputType="textPersonName"
+         android:hint="Name"
+         android:drawableLeft="@drawable/ic_name"
+         android:background="@drawable/button_bg"
+         android:ems="10"
+         android:layout_marginTop="185dp"
+         android:id="@+id/eT_name"
+         android:layout_alignParentTop="true"
+         android:layout_centerHorizontal="true" /> -->
+
+
+
+    <!-- <EditText
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:paddingLeft="5dp"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_bg"
+        android:inputType="phone"
+        android:ems="10"
+        android:drawableLeft="@drawable/ic_phone"
+        android:layout_below="@+id/eT_name"
+        android:layout_alignStart="@+id/eT_name"
+        android:layout_marginTop="5dp"
+        android:id="@+id/eT_phone"
+        android:hint="Phone Number" /> -->
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:paddingLeft="5dp"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/button_bg"
+        android:textColor="@color/colorPrimary"
+        android:ems="10"
+        android:drawableLeft="@drawable/ic_email"
+        android:id="@+id/eT_email_login"
+        android:hint="Email"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/eT_password_login"
+        android:layout_alignStart="@+id/eT_password_login" />
+
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:paddingLeft="5dp"
+        android:inputType="textPassword"
+        android:background="@drawable/button_bg"
+        android:textColor="@color/colorPrimary"
+        android:ems="10"
+        android:drawableLeft="@drawable/ic_lock"
+        android:id="@+id/eT_password_login"
+        android:hint="Password"
+        android:layout_below="@+id/eT_email_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp" />
+
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_bg"
+        android:id="@+id/btn_logIn"
+        android:layout_above="@+id/btn_sign_up"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="New user? SignUp"
+        android:textSize="20dp"
+        android:id="@+id/btn_sign_up"
+        android:background="@null"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp" />
+
+
+</RelativeLayout>
