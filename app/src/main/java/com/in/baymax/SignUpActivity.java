@@ -33,6 +33,8 @@ public class SignUpActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.activity_sign_up);
 
+
+
         Typeface tf = Typeface.createFromAsset(getAssets(),
                 "fonts/Walkway_Bold.ttf");
 
@@ -53,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("TAG", "signed in");
+                    startActivity(new Intent(SignUpActivity.this,MapsActivity.class));
 
                 } else {
                     Log.d("TAG", "signed out");

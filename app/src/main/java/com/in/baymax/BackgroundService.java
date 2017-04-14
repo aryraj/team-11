@@ -70,6 +70,13 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -97,7 +104,6 @@ public class BackgroundService extends Service implements SensorEventListener {
 
     public static final String TAG = BackgroundService.class.getName();
     public static final int SCREEN_OFF_RECEIVER_DELAY = 500;
-
     private PowerManager.WakeLock mWakeLock;
 
     public BackgroundService() {
@@ -220,7 +226,7 @@ public class BackgroundService extends Service implements SensorEventListener {
                 vibrator.vibrate(1000);
 
                 // call sendmessage
-                new SendMessage().execute();
+                //new SendMessage().execute();
 
 
                 //showAlert();
@@ -313,11 +319,12 @@ public class BackgroundService extends Service implements SensorEventListener {
     private Notification buildNotification(){
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(this);
-        b.setOngoing(true);
+        b.setOngoing(false);
         b.setContentTitle("Title from baymax");
         b.setContentText("Text from baymax");
         b.setSmallIcon(R.mipmap.ic_launcher);
         b.setTicker("ticker");
+
 
         return b.build();
     }
@@ -332,7 +339,7 @@ public class BackgroundService extends Service implements SensorEventListener {
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
-            String forecastJsonStr = null;
+            String JsonStr = null;
 
             try {
 
@@ -367,8 +374,8 @@ public class BackgroundService extends Service implements SensorEventListener {
                     // Stream was empty.  No point in parsing.
                     return null;
                 }
-                forecastJsonStr = buffer.toString();
-                return forecastJsonStr;
+                JsonStr = buffer.toString();
+                return JsonStr;
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping

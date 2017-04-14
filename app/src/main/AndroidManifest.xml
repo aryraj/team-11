@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ab"
@@ -27,14 +28,12 @@
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".AddContactActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity">
+
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -49,16 +48,19 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-<<<<<<< HEAD
-        <activity android:name=".ProfileActivity"></activity>
-=======
+            android:label="@string/title_activity_maps">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ProfileActivity"/>
 
         <service
             android:name=".BackgroundService"
             android:enabled="true"
-            android:exported="true"></service>
->>>>>>> 8a8a9ee74cf3daf170ca3c533b2bccaa3a756105
+            android:exported="true"/>
     </application>
 
 </manifest>

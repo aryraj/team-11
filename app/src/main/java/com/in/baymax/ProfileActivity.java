@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -65,15 +66,18 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         p_name = (EditText) findViewById(R.id.eT_name_pro);
-        p_name.setTypeface(tf);
+        //p_name.setTypeface(tf);
         p_phone = (EditText) findViewById(R.id.eT_phone_pro);
-        p_phone.setTypeface(tf);
+       // p_phone.setTypeface(tf);
         btn_save_p = (Button) findViewById(R.id.btn_save_pro);
-        btn_save_p.setTypeface(tf);
+        //btn_save_p.setTypeface(tf);
 
 
-        s_name = p_name.getText().toString().toLowerCase().trim();
-        s_phone = p_phone.getText().toString().trim();
+        s_name = p_name.getText().toString();
+        s_phone = p_phone.getText().toString();
+
+        nameMap = new HashMap<>();
+        phoneMap = new HashMap<>();
 
         nameMap.put("name", s_name);
         phoneMap.put("phone", s_phone);
@@ -84,10 +88,10 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DatabaseReference myRef = database.getReference().child(uid).child("profile-details");
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference().child(uid).child("profile-details");
                 myRef.updateChildren(nameMap);
                 myRef.updateChildren(phoneMap);
-                startActivity(new Intent(ProfileActivity.this,MapsActivity.class));
+                startActivity(new Intent(ProfileActivity.this, MapsActivity.class));
             }
         });
 

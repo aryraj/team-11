@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -229,7 +230,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mCurrentLocMarker.remove();
         }
 
+        double startTime = System.currentTimeMillis();
+        double diffTime = System.currentTimeMillis() - startTime;
         double speed = location.getSpeed();
+
 
 
         lat = location.getLatitude();
@@ -239,7 +243,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.title("Speed: " + speed + " Km/h" );
+        markerOptions.title("Speed: " + speed * 3.6 + " Km/h" );
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrentLocMarker = mMap.addMarker(markerOptions);
 
@@ -250,6 +254,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+
+
 
     }
 
@@ -339,8 +345,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9 + delta;
 
-
-
             if (mAccel > 10) {
                 Toast.makeText(MapsActivity.this, "Acceleration Detected!", Toast.LENGTH_SHORT).show();
 
@@ -348,11 +352,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // call sendmessage
                 // new SendMessage().execute();
-
-
-                // showAlert();
-
-
             }
 
         }
@@ -366,80 +365,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    private class SendMessage extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            // Will contain the raw JSON response as a string.
-            String forecastJsonStr = null;
-
-            try {
-
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-                URL url = new URL("https://control.msg91.com/api/sendhttp.php?authkey=142714AmcG6l7Cl58b183b8&mobiles=919972971606,918971607803,91789091463&message=Your friend was in an accident. See their location at http://maps.google.com/?ll="+lat+","+lon+"&sender=BAYMAX&route=4&country=0");
-
-                // Create the request to OpenWeatherMap, and open the connection
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    // Nothing to do.
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
-                    return null;
-                }
-                forecastJsonStr = buffer.toString();
-                return forecastJsonStr;
-            } catch (IOException e) {
-                Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
-                return null;
-            } finally{
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("PlaceholderFragment", "Error closing stream", e);
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //tvWeatherJson.setText(s);
-            Log.i("json", s);
-        }
     }
 
 }

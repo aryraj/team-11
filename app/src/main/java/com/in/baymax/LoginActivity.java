@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("TAG5", "User signed in");
+                    startActivity(new Intent(LoginActivity.this, MapsActivity.class));
                 } else {
                     Log.d("TAG6", "User signed out");
                 }
