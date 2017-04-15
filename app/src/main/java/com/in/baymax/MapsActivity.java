@@ -2,8 +2,10 @@ package com.in.baymax;
 
 import android.*;
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,6 +15,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -23,6 +26,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -59,9 +63,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location mLastLocation;
     double lat, lon;
     Marker mCurrentLocMarker;
-    Switch aSwitch;
-
-
     private SensorManager mSensorManager;
     private Sensor sensor;
     private double mAccel;
@@ -71,10 +72,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView textView, tv3, tv2, tv;
     private LocationManager mLocationManager;
     private Vibrator vibrator;
-    AlertDialog alertBox;
-
+    private Switch aSwitch;
+    double maxSpeed, minSpeed;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
-
+    private Button button1, button2;
+    MyReceiver myReceiver;
+    private Handler handler = new Handler();
 
 
 
@@ -90,7 +93,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         buildApi();
 
 
-
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -101,19 +103,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
+        button1 = (Button) findViewById(R.id.button3);
+        button2 = (Button) findViewById(R.id.button8);
 
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceStart();
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceStop();
+            }
+        });
 
 
     }
 
 
-    public void ServiceStart(){
-        Intent i = new Intent(MapsActivity.this, BackgroundService.class);
+    public void ServiceStart() {
+        Intent i = new Intent(MapsActivity.this, MyService.class);
         startService(i);
     }
 
-    public void ServiceStop(){
-        Intent i = new Intent(MapsActivity.this, BackgroundService.class);
+    public void ServiceStop() {
+        Intent i = new Intent(MapsActivity.this, MyService.class);
         startService(i);
     }
 
@@ -123,10 +140,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
-
 
 
     }
@@ -154,18 +170,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
             }
-        }
-        else {
+        } else {
             buildApi();
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
-
-
-
-
-
-
 
 
         // Add a marker in Sydney and move the camera
@@ -197,6 +206,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onStart();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
+            myReceiver = new MyReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(MyService.MY_ACTION);
+            registerReceiver(myReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        if (mGoogleApiClient != null){
+            mGoogleApiClient.connect();
         }
     }
 
@@ -208,12 +229,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
-
-
-
-    protected synchronized void buildApi(){
+    protected synchronized void buildApi() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -230,9 +246,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mCurrentLocMarker.remove();
         }
 
-        double startTime = System.currentTimeMillis();
-        double diffTime = System.currentTimeMillis() - startTime;
-        double speed = location.getSpeed();
+
+       double speed = location.getSpeed();
+
 
 
 
@@ -258,6 +274,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -345,26 +363,108 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9 + delta;
 
-            if (mAccel > 10) {
+            if (mAccel > 15) {
                 Toast.makeText(MapsActivity.this, "Acceleration Detected!", Toast.LENGTH_SHORT).show();
 
                 vibrator.vibrate(1000);
 
                 // call sendmessage
-                // new SendMessage().execute();
+                new SendMessage().execute();
             }
 
         }
     }
 
 
-
-
-
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    private class SendMessage extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will contain the raw JSON response as a string.
+            String JsonStr = null;
+
+            try {
+
+                // Construct the URL for the OpenWeatherMap query
+                // Possible parameters are avaiable at OWM's forecast API page, at
+                // http://openweathermap.org/API#forecast
+                URL url = new URL("https://control.msg91.com/api/sendhttp.php?authkey=142714AmcG6l7Cl58b183b8&mobiles=919972971606,918971607803&message=Your friend Aryan might be in an accident. See their location at http://maps.google.com/?ll=" + lat + "," + lon + "&sender=BAYMAX&route=4&country=0");
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                JsonStr = buffer.toString();
+                return JsonStr;
+            } catch (IOException e) {
+                Log.e("PlaceholderFragment", "Error ", e);
+                // If the code didn't successfully get the weather data, there's no point in attemping
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("PlaceholderFragment", "Error closing stream", e);
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //tvWeatherJson.setText(s);
+            Log.i("json", s);
+            Toast.makeText(getBaseContext(), "Help is on the way! Your friends have been informed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class MyReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            double data = intent.getIntExtra("speed", 0);
+
+        }
+    }
+
 
 }

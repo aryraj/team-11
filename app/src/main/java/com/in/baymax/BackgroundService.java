@@ -320,9 +320,9 @@ public class BackgroundService extends Service implements SensorEventListener {
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(this);
         b.setOngoing(false);
-        b.setContentTitle("Title from baymax");
-        b.setContentText("Text from baymax");
-        b.setSmallIcon(R.mipmap.ic_launcher);
+        b.setContentTitle("Alert from baymax");
+        b.setContentText("Monitoring your trip!");
+        b.setSmallIcon(R.drawable.ab);
         b.setTicker("ticker");
 
 
